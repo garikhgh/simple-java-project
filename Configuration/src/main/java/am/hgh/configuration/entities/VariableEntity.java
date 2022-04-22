@@ -59,7 +59,7 @@ public class VariableEntity {
                 ", unit=" + unit +
                 ", createdAt=" + createdAt +
                 ", lastModifiedAt=" + lastModifiedAt +
-                ", configurationEntity=" + configurationEntity +
+
                 '}';
     }
 }

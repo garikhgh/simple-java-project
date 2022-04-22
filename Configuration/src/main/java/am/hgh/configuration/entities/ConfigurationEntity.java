@@ -31,4 +31,14 @@ public class ConfigurationEntity {
     @JsonManagedReference
     @Singular  private List<VariableEntity> variableList;
 
+    @Override
+    public String toString() {
+        return "ConfigurationEntity{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", tagList=" + tagList +
+                ", variableList=" + variableList +
+                '}';
+    }
 }

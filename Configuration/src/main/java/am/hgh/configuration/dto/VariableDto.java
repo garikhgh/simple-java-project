@@ -23,4 +23,11 @@ public class VariableDto {
     private LocalDate createdAt;
     private LocalDate lastModifiedAt;
 
+    @Override
+    public String toString() {
+        return "VariableDto{" +
+                "createdAt=" + createdAt +
+                ", lastModifiedAt=" + lastModifiedAt +
+                '}';
+    }
 }

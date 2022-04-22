@@ -2,6 +2,7 @@ plugins {
     id 'org.springframework.boot' version '2.6.6'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
+    id 'org.unbroken-dome.test-sets' version '4.0.0'
 }
 
 group = 'am.hgh'
@@ -23,7 +24,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-    implementation 'org.flywaydb:flyway-core'
+    // https://mvnrepository.com/artifact/org.flywaydb/flyway-core
+    implementation group: 'org.flywaydb', name: 'flyway-core', version: '8.5.9'
+
 
     runtimeOnly 'org.postgresql:postgresql'
 
@@ -44,16 +47,33 @@ dependencies {
 
 
 
+
 }
 
 tasks.named('test') {
     useJUnitPlatform()
 }
+//
+sourceSets {
+    intTest {
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+}
 
-//sourceSets {
-//    main {
-//        resources {
-//            srcDir 'application-test.properties'
-//        }
-//    }
-//}
+configurations {
+    intTestImplementation.extendsFrom implementation
+    intTestRuntimeOnly.extendsFrom runtimeOnly
+}
+
+dependencies {
+    intTestImplementation 'junit:junit5:2.8.1.Final'
+}
+testSets {
+    integrationTest
+}
+
+
+tasks.named('check') {
+    dependsOn testing.suites.integrationTest
+}

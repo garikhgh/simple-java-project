@@ -14,10 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class ConfigurationServices {
@@ -31,9 +28,15 @@ public class ConfigurationServices {
     public List<ConfigurationEntity> getAllConfigs() {
         return (List<ConfigurationEntity>) configurationRepositories.findAll();
     }
-    public ConfigurationEntity getConfigById(Long configId) {
-        Optional<ConfigurationEntity> optionalConfigurationObjEntity = configurationRepositories.findById(configId);
-        return optionalConfigurationObjEntity.orElse(null);
+    public ResponseEntity<ConfigurationEntity> getConfigById(Long configId) {
+        try {
+            ConfigurationEntity configurationObjEntity = configurationRepositories.findById(configId).get();
+            return new ResponseEntity<>(configurationObjEntity, HttpStatus.OK);
+
+        } catch (IllegalArgumentException e){
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+
     }
     public ResponseEntity<ConfigurationEntity> addConfig(ConfigurationDto configurationDto) {
 

@@ -1,4 +1,4 @@
-package am.hgh.configuration.Util;
+package am.hgh.configuration.util;
 
 import am.hgh.configuration.dto.ConfigurationDto;
 import am.hgh.configuration.dto.TagDto;
@@ -13,18 +13,18 @@ public class ConfigurationSample4Test {
 
     private ConfigurationDto configurationDto;
 
-    TagDto tagDto = new TagDto(1L, null, null);
-    VariableDto variableDto = new VariableDto(1L, "test",
+    TagDto tagDto = new TagDto(5L, null, null);
+    VariableDto variableDto = new VariableDto(5L, "test",
             "description", 111, 555, 444, null, null);
-    List<TagDto> tagDtoList = new ArrayList<>();
-    List<VariableDto> VariableDtoList = new ArrayList<>();
+    List<TagDto> tagListDto = new ArrayList<>();
+    List<VariableDto> VariableListDto = new ArrayList<>();
 
     public ConfigurationSample4Test() {}
 
     public ConfigurationDto getConfigurationDto() {
-        tagDtoList.add(tagDto);
-        VariableDtoList.add(variableDto);
-        return  new ConfigurationDto(3L, "dummy test","test description",tagDtoList, VariableDtoList);
+        tagListDto.add(tagDto);
+        VariableListDto.add(variableDto);
+        return  new ConfigurationDto(4L, "dummy test","test description",tagListDto, VariableListDto);
         
     }
 

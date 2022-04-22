@@ -22,7 +22,7 @@ public class ConfigurationControllers {
     }
 
     @GetMapping("/{config_id}")
-    public ConfigurationEntity getConfigById(@PathVariable Long config_id) {
+    public ResponseEntity<ConfigurationEntity> getConfigById(@PathVariable Long config_id) {
         return configurationServices.getConfigById(config_id);
 
     }

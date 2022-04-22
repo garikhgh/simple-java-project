@@ -20,4 +20,14 @@ public class ConfigurationDto {
     @Singular
     private List<VariableDto> variableListDto;
 
+    @Override
+    public String toString() {
+        return "ConfigurationDto{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", tagListDto=" + tagListDto +
+                ", variableListDto=" + variableListDto +
+                '}';
+    }
 }

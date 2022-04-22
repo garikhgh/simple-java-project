@@ -16,5 +16,12 @@ public class TagDto {
     private LocalDate createdAt;
     private LocalDate lastModifiedAt;
 
-
+    @Override
+    public String toString() {
+        return "TagDto{" +
+                "id=" + id +
+                ", createdAt=" + createdAt +
+                ", lastModifiedAt=" + lastModifiedAt +
+                '}';
+    }
 }

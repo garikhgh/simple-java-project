@@ -1,7 +1,7 @@
-package am.hgh.configuration.controllers;
+package am.hgh.configuration.unitTest.controllers;
 
-import am.hgh.configuration.Util.ConfigurationSample4Test;
-import am.hgh.configuration.Util.LocalDateAdapter;
+import am.hgh.configuration.util.ConfigurationSample4Test;
+import am.hgh.configuration.util.LocalDateAdapter;
 import am.hgh.configuration.dto.ConfigurationDto;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -76,7 +76,7 @@ class ConfigurationControllersTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(3));
     }
 
     @Test
