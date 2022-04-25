@@ -15,22 +15,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.web.client.HttpClientErrorException;
 
-import java.net.http.HttpHeaders;
 import java.time.LocalDate;
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.OptionalLong;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 
 @ActiveProfiles("integration")
@@ -129,7 +120,6 @@ class ConfigurationServicesTest {
     }
 
 
-
     @Test
     void deleteConfigById() {
 
@@ -144,15 +134,33 @@ class ConfigurationServicesTest {
 
     @Test
     void deleteConfigVariableById() {
-        int configId = 1;
-        int variableId = 1;
-        ConfigurationEntity configurationEntity = testRestTemplate.getForObject("/config/"+ configId +"/" + variableId, ConfigurationEntity.class);
-        List<VariableEntity> variableEntityList = configurationEntity.getVariableList();
-//        variableEntityList.remove(variableId);
-//        configurationEntity.setVariableList(variableEntityList);
-        System.out.println(configurationEntity);
-//        testRestTemplate.put("/config/update", configurationEntity);
-//        ConfigurationEntity configurationEntity1 = testRestTemplate.getForObject("/config/"+ configId, ConfigurationEntity.class);
-//        Assertions.assertNotNull(configurationEntity1);
+        Long configId = 1L;
+        Long variableId = 1L;
+
+        List<VariableEntity> variableEntityList2Remove = new ArrayList<>();
+        ConfigurationEntity updatedConfig = null;
+        if (configurationRepositories.existsById(configId)) {
+
+            ConfigurationEntity configFromDb2UpdateVariableById = configurationRepositories.findById(configId).get();
+            List<VariableEntity> configVariableListFromDb = configFromDb2UpdateVariableById.getVariableList();
+
+            for (VariableEntity variable : configVariableListFromDb) {
+
+                if (variable.getId() == variableId) {
+                    variableEntityList2Remove.add(variable);
+                }
+            }
+            configVariableListFromDb.removeAll(variableEntityList2Remove);
+            configFromDb2UpdateVariableById.setVariableList(configVariableListFromDb);
+
+            updatedConfig = configurationRepositories.save(configFromDb2UpdateVariableById);
+
+        } else {
+            int error = 2;
+        }
+        assert updatedConfig != null;
+        Assertions.assertEquals(1, updatedConfig.getVariableList().size());
+
+
     }
 }
