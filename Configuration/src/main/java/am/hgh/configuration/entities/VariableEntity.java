@@ -2,6 +2,8 @@ package am.hgh.configuration.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -28,6 +30,9 @@ public class VariableEntity {
     private int maxValue;
     private int unit;
 
+
+    @CreationTimestamp
+    @Column(updatable = false)
     private LocalDate createdAt;
     private LocalDate lastModifiedAt;
 

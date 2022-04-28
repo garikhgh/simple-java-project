@@ -34,10 +34,8 @@ class ConfigurationControllersTest {
     @Autowired
     private MockMvc mockMvc;
 
-
     @Autowired
     ConfigurationSample4Test configurationSample4Test = new ConfigurationSample4Test();
-    ConfigurationDto configurationDto = configurationSample4Test.getConfigurationDto();
 
 
     @Test
@@ -66,11 +64,11 @@ class ConfigurationControllersTest {
 
     @Test
     @DisplayName("addConfiguration")
-    void addConfiguration() throws Exception {
-
+    void createConfiguration() throws Exception {
+        ConfigurationDto configurationDto = configurationSample4Test.getConfigurationDto(3L,5L,5L);
         mockMvc.perform(
                 MockMvcRequestBuilders
-                        .post("/config/add")
+                        .post("/config/create")
                         .content(gson.toJson(configurationDto))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -82,6 +80,7 @@ class ConfigurationControllersTest {
     @Test
     @DisplayName("updateConfiguration")
     void updateConfiguration() throws Exception{
+        ConfigurationDto configurationDto = configurationSample4Test.getConfigurationDto(2L,2L,2L);
         mockMvc.perform(MockMvcRequestBuilders
                 .put("/config/update")
                 .content(gson.toJson(configurationDto))
@@ -89,7 +88,7 @@ class ConfigurationControllersTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
 //                .andExpect(status().isFound())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(3))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(2))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("dummy test"));
 
     }
@@ -98,13 +97,14 @@ class ConfigurationControllersTest {
     @DisplayName("deleteConfiguration")
     void deleteConfiguration() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.delete("/config/{configId}", 1))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
 
     }
 
     @Test
     @DisplayName("deleteConfigVariable")
     void deleteConfigVariable() throws Exception {
+        ConfigurationDto configurationDto = configurationSample4Test.getConfigurationDto(1L,1L,1L);
         mockMvc.perform(MockMvcRequestBuilders.patch("/config/1/2")
                 .content(gson.toJson(configurationDto))
                 .contentType(MediaType.APPLICATION_JSON)

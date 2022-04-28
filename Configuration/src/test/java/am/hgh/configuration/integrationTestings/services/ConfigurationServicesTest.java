@@ -1,10 +1,7 @@
 package am.hgh.configuration.integrationTestings.services;
 
 import am.hgh.configuration.dto.ConfigurationDto;
-import am.hgh.configuration.dto.TagDto;
-import am.hgh.configuration.dto.VariableDto;
 import am.hgh.configuration.entities.ConfigurationEntity;
-import am.hgh.configuration.entities.TagEntity;
 import am.hgh.configuration.entities.VariableEntity;
 import am.hgh.configuration.mappers.ConfigMapper;
 import am.hgh.configuration.repositories.ConfigurationRepositories;
@@ -18,7 +15,6 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +26,7 @@ import java.util.Optional;
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ConfigurationServicesTest {
 
+    private static final String CONFIGURATION_DOES_NOT_EXIST = "Configuration %d does not exist.";
     @Autowired
     private ConfigurationRepositories configurationRepositories;
 
@@ -39,11 +36,13 @@ class ConfigurationServicesTest {
     @Autowired
     private ConfigMapper configMapper;
 
+    @Autowired
+    private am.hgh.configuration.utils.ConfigurationDateMapper ConfigurationDateMapper;
+
     @Test
     void getAllConfigs() {
 
-        List allConfig = testRestTemplate.getForObject("/config/all", List.class);
-        System.out.println(allConfig);
+        Iterable<ConfigurationEntity> allConfig = configurationRepositories.findAll();
         Assertions.assertNotNull(allConfig);
     }
 
@@ -51,72 +50,42 @@ class ConfigurationServicesTest {
     void getConfigById() {
         Long configId = 1L;
         ConfigurationEntity configurationEntity = configurationRepositories.findById(configId).get();
-        System.out.println(configurationEntity.getId());
+        System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"+configurationEntity);
         Assertions.assertNotNull(configurationEntity);
+        Assertions.assertNotNull(configurationEntity.getVariableList());
+        Assertions.assertNotNull(configurationEntity.getTagList());
     }
 
     @Test
     void addConfig() {
-        ConfigurationEntity addedConfig = null;
+
         ConfigurationSample4Test configurationSample4Test = new ConfigurationSample4Test();
-        ConfigurationDto configurationDto = configurationSample4Test.getConfigurationDto();
+        ConfigurationDto configurationDto = configurationSample4Test.getConfigurationDto(3L,5L,5L);
 
-        List<TagDto> tagListsFromFront = configurationDto.getTagListDto();
-        for (TagDto tagCreatedAt : tagListsFromFront) {
-            tagCreatedAt.setCreatedAt(LocalDate.now());
-            tagCreatedAt.setLastModifiedAt(LocalDate.now());
 
-        }
-        configurationDto.setTagListDto(tagListsFromFront);
+        ConfigurationEntity  config2Add = ConfigurationDateMapper.addLastModifiedDateAndSetConfigId(configurationDto);
 
-        List<VariableDto> variablesListFromFront = configurationDto.getVariableListDto();
-        for (VariableDto variableCreatedAt: variablesListFromFront) {
-            variableCreatedAt.setCreatedAt(LocalDate.now());
-            variableCreatedAt.setLastModifiedAt(LocalDate.now());
-        }
-        configurationDto.setVariableListDto(variablesListFromFront);
-        System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$"+ configurationDto);
-        ConfigurationEntity config2Add = configMapper.configDto2Config(configurationDto);
-
-        config2Add.getTagList().forEach(tagEntity->tagEntity.setConfigurationEntity(config2Add));
-        config2Add.getVariableList().forEach(variableEntity -> variableEntity.setConfigurationEntity(config2Add));
-        addedConfig = configurationRepositories.save(config2Add);
+        ConfigurationEntity addedConfig = configurationRepositories.save(config2Add);
 
         Assertions.assertNotNull(addedConfig);
         Assertions.assertNotNull(addedConfig.getId());
+        Assertions.assertNotNull(addedConfig.getVariableList());
+        Assertions.assertNotNull(addedConfig.getTagList());
     }
 
     @Test
     void updateConfig() {
         ConfigurationSample4Test configurationSample4Test = new ConfigurationSample4Test();
-        ConfigurationDto configurationDto = configurationSample4Test.getConfigurationDto();
+        ConfigurationDto configurationDto = configurationSample4Test.getConfigurationDto(2L,3L,3L);
 
         Long configId = 1L;
+        configurationRepositories.findById(configId).orElseThrow(() -> new NullPointerException(String.format(CONFIGURATION_DOES_NOT_EXIST, configId)));
         configurationDto.setId(configId);
-
-        ConfigurationEntity configFromFront2Update = configMapper.configDto2Config(configurationDto);
-
-        ConfigurationEntity updatedConfig = null;
-        if (configurationRepositories.existsById(configId)) {
-            List<TagEntity> tagListsUpdateLastModifiedAt = configFromFront2Update.getTagList();
-            for (TagEntity tagCreatedAt : tagListsUpdateLastModifiedAt) {
-                tagCreatedAt.setLastModifiedAt(LocalDate.now());
-            }
-            List<VariableEntity> variablesListUpdateLastModifiedAt = configFromFront2Update.getVariableList();
-            for (VariableEntity variableCreatedAt : variablesListUpdateLastModifiedAt) {
-                variableCreatedAt.setLastModifiedAt(LocalDate.now());
-
-            }
-            configFromFront2Update.setTagList(tagListsUpdateLastModifiedAt);
-            configFromFront2Update.setVariableList(variablesListUpdateLastModifiedAt);
-
-            configFromFront2Update.getTagList().forEach(tagEntity -> tagEntity.setConfigurationEntity(configFromFront2Update));
-            configFromFront2Update.getVariableList().forEach(variableEntity -> variableEntity.setConfigurationEntity(configFromFront2Update));
-
-            updatedConfig = configurationRepositories.save(configFromFront2Update);
-
-        }
+        ConfigurationEntity config2Add = ConfigurationDateMapper.addLastModifiedDateAndSetConfigId(configurationDto);
+        ConfigurationEntity updatedConfig = configurationRepositories.save(config2Add);
         Assertions.assertEquals(configId, updatedConfig.getId());
+        Assertions.assertNotNull(updatedConfig.getVariableList());
+        Assertions.assertNotNull(updatedConfig.getTagList());
     }
 
 
@@ -124,43 +93,32 @@ class ConfigurationServicesTest {
     void deleteConfigById() {
 
         Long configId = 1L;
+        configurationRepositories.findById(configId).orElseThrow(() -> new NullPointerException(String.format(CONFIGURATION_DOES_NOT_EXIST, configId)));
         configurationRepositories.deleteById(configId);
-
         Optional<ConfigurationEntity> configurationEntity = configurationRepositories.findById(configId);
         Assertions.assertFalse(configurationEntity.isPresent());
-
 
     }
 
     @Test
     void deleteConfigVariableById() {
-        Long configId = 1L;
+        Long configId = 2L;
         Long variableId = 1L;
-
-        List<VariableEntity> variableEntityList2Remove = new ArrayList<>();
         ConfigurationEntity updatedConfig = null;
-        if (configurationRepositories.existsById(configId)) {
-
-            ConfigurationEntity configFromDb2UpdateVariableById = configurationRepositories.findById(configId).get();
-            List<VariableEntity> configVariableListFromDb = configFromDb2UpdateVariableById.getVariableList();
-
-            for (VariableEntity variable : configVariableListFromDb) {
-
-                if (variable.getId() == variableId) {
-                    variableEntityList2Remove.add(variable);
-                }
+        List<VariableEntity> variableEntityList2Remove = new ArrayList<>();
+        ConfigurationEntity configFromDb2UpdateVariableById = configurationRepositories.findById(configId).orElseThrow(() -> new NullPointerException(String.format(CONFIGURATION_DOES_NOT_EXIST, configId)));
+        List<VariableEntity> configVariableListFromDb = configFromDb2UpdateVariableById.getVariableList();
+        for (VariableEntity variable : configVariableListFromDb) {
+            if (variable.getId() == variableId) {
+                variableEntityList2Remove.add(variable);
             }
-            configVariableListFromDb.removeAll(variableEntityList2Remove);
-            configFromDb2UpdateVariableById.setVariableList(configVariableListFromDb);
-
-            updatedConfig = configurationRepositories.save(configFromDb2UpdateVariableById);
-
-        } else {
-            int error = 2;
         }
-        assert updatedConfig != null;
-        Assertions.assertEquals(1, updatedConfig.getVariableList().size());
+        configVariableListFromDb.removeAll(variableEntityList2Remove);
+        configFromDb2UpdateVariableById.setVariableList(configVariableListFromDb);
 
+        updatedConfig = configurationRepositories.save(configFromDb2UpdateVariableById);
+
+        Assertions.assertEquals(1, updatedConfig.getVariableList().size());
 
     }
 }
