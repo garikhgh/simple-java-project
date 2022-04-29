@@ -21,9 +21,6 @@ public class ConfigurationServices {
     @Autowired
     private ConfigMapper configMapper;
 
-    @Autowired
-    private ConfigurationDateMapper configurationDateMapper;
-
     public List<ConfigurationEntity> getAllConfigs() {
         return (List<ConfigurationEntity>) configurationRepositories.findAll();
     }
@@ -31,14 +28,20 @@ public class ConfigurationServices {
         return configurationRepositories.findById(configId).orElseThrow(() -> new NullPointerException(String.format(CONFIGURATION_DOES_NOT_EXIST, configId)));
     }
     public ConfigurationEntity createConfig(ConfigurationDto configurationDto) {
-        ConfigurationEntity config2Add = configurationDateMapper.addLastModifiedDateAndSetConfigId(configurationDto);
-        return configurationRepositories.save(config2Add);
+        ConfigurationDto config2Add = ConfigurationDateMapper.addLastModifiedDateAndSetConfigId(configurationDto);
+        ConfigurationEntity configEntity2Add = configMapper.configDto2Config(configurationDto);
+        configEntity2Add.getTagList().forEach(tagEntity->tagEntity.setConfigurationEntity(configEntity2Add));
+        configEntity2Add.getVariableList().forEach(variableEntity -> variableEntity.setConfigurationEntity(configEntity2Add));
+        return configurationRepositories.save(configEntity2Add);
     }
     public ConfigurationEntity updateConfig(ConfigurationDto configurationDto) {
             Long configId = configurationDto.getId();
-            ConfigurationEntity config2Add = configurationDateMapper.addLastModifiedDateAndSetConfigId(configurationDto);
+            ConfigurationDto config2Add = ConfigurationDateMapper.addLastModifiedDateAndSetConfigId(configurationDto);
+            ConfigurationEntity configEntity2Add = configMapper.configDto2Config(configurationDto);
+            configEntity2Add.getTagList().forEach(tagEntity->tagEntity.setConfigurationEntity(configEntity2Add));
+            configEntity2Add.getVariableList().forEach(variableEntity -> variableEntity.setConfigurationEntity(configEntity2Add));
             configurationRepositories.findById(configId).orElseThrow(() -> new NullPointerException(String.format(CONFIGURATION_DOES_NOT_EXIST, configId)));
-            return configurationRepositories.save(config2Add);
+            return configurationRepositories.save(configEntity2Add);
     }
     public void deleteConfigById(Long configId) {
         configurationRepositories.findById(configId).orElseThrow(() -> new NullPointerException(String.format(CONFIGURATION_DOES_NOT_EXIST, configId)));
