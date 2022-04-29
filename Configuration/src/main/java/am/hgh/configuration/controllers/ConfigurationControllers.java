@@ -4,7 +4,6 @@ import am.hgh.configuration.dto.ConfigurationDto;
 import am.hgh.configuration.entities.ConfigurationEntity;
 import am.hgh.configuration.services.ConfigurationServices;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

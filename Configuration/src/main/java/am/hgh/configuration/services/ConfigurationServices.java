@@ -1,8 +1,6 @@
 package am.hgh.configuration.services;
 
 import am.hgh.configuration.dto.ConfigurationDto;
-import am.hgh.configuration.dto.TagDto;
-import am.hgh.configuration.dto.VariableDto;
 import am.hgh.configuration.entities.ConfigurationEntity;
 import am.hgh.configuration.entities.VariableEntity;
 import am.hgh.configuration.mappers.ConfigMapper;
@@ -11,8 +9,8 @@ import am.hgh.configuration.utils.ConfigurationDateMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ConfigurationServices {
