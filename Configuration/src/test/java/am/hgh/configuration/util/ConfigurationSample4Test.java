@@ -22,7 +22,6 @@ public class ConfigurationSample4Test {
         tagListDto.add(tagDto);
         VariableListDto.add(variableDto);
         return  new ConfigurationDto(configId, "dummy test","test description",tagListDto, VariableListDto);
-        
     }
 
 }

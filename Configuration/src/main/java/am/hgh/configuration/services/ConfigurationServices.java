@@ -25,11 +25,11 @@ public class ConfigurationServices {
         return (List<ConfigurationEntity>) configurationRepositories.findAll();
     }
     public ConfigurationEntity getConfigById(Long configId) {
-        return configurationRepositories.findById(configId).orElseThrow(() -> new NullPointerException(String.format(CONFIGURATION_DOES_NOT_EXIST, configId)));
+        return configurationRepositories.findById(configId).orElse(null);
     }
     public ConfigurationEntity createConfig(ConfigurationDto configurationDto) {
         ConfigurationDto config2Add = ConfigurationDateMapper.addLastModifiedDateAndSetConfigId(configurationDto);
-        ConfigurationEntity configEntity2Add = configMapper.configDto2Config(configurationDto);
+        ConfigurationEntity configEntity2Add = configMapper.configDto2Config(config2Add);
         configEntity2Add.getTagList().forEach(tagEntity->tagEntity.setConfigurationEntity(configEntity2Add));
         configEntity2Add.getVariableList().forEach(variableEntity -> variableEntity.setConfigurationEntity(configEntity2Add));
         return configurationRepositories.save(configEntity2Add);
@@ -37,7 +37,7 @@ public class ConfigurationServices {
     public ConfigurationEntity updateConfig(ConfigurationDto configurationDto) {
             Long configId = configurationDto.getId();
             ConfigurationDto config2Add = ConfigurationDateMapper.addLastModifiedDateAndSetConfigId(configurationDto);
-            ConfigurationEntity configEntity2Add = configMapper.configDto2Config(configurationDto);
+            ConfigurationEntity configEntity2Add = configMapper.configDto2Config(config2Add);
             configEntity2Add.getTagList().forEach(tagEntity->tagEntity.setConfigurationEntity(configEntity2Add));
             configEntity2Add.getVariableList().forEach(variableEntity -> variableEntity.setConfigurationEntity(configEntity2Add));
             configurationRepositories.findById(configId).orElseThrow(() -> new NullPointerException(String.format(CONFIGURATION_DOES_NOT_EXIST, configId)));

@@ -3,9 +3,6 @@ package am.hgh.configuration.utils;
 import am.hgh.configuration.dto.ConfigurationDto;
 import am.hgh.configuration.dto.TagDto;
 import am.hgh.configuration.dto.VariableDto;
-import am.hgh.configuration.entities.ConfigurationEntity;
-import am.hgh.configuration.mappers.ConfigMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
