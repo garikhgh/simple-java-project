@@ -12,17 +12,13 @@ import java.time.LocalDate;
 public class VariableDto {
 
     private Long id;
-
     private String name;
     private String description;
-
     private int minValue;
     private int maxValue;
     private int unit;
-
     private LocalDate createdAt;
     private LocalDate lastModifiedAt;
-
     @Override
     public String toString() {
         return "VariableDto{" +

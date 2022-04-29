@@ -10,13 +10,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ActiveProfiles("test")
 @SpringBootTest
 class ConfigurationApplicationTests {
-
     @Autowired
     private ConfigurationControllers configurationControllers;
-
     @Test
     void contextLoads() {
         assertThat(configurationControllers).isNotNull();
     }
-
 }

@@ -30,14 +30,10 @@ class ConfigurationControllersTest {
             .setPrettyPrinting()
             .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
             .create();
-
     @Autowired
     private MockMvc mockMvc;
-
     @Autowired
     ConfigurationSample4Test configurationSample4Test = new ConfigurationSample4Test();
-
-
     @Test
     @DisplayName("getAllConfigurations")
     void getAllConfigurations() throws Exception{
@@ -49,7 +45,6 @@ class ConfigurationControllersTest {
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").isNotEmpty());
     }
-
     @Test
     @DisplayName("getConfigById")
     void getConfigById() throws Exception {
@@ -61,7 +56,6 @@ class ConfigurationControllersTest {
                 .andDo(print())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1));
     }
-
     @Test
     @DisplayName("addConfiguration")
     void createConfiguration() throws Exception {
@@ -76,7 +70,6 @@ class ConfigurationControllersTest {
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(3));
     }
-
     @Test
     @DisplayName("updateConfiguration")
     void updateConfiguration() throws Exception{
@@ -90,17 +83,13 @@ class ConfigurationControllersTest {
 //                .andExpect(status().isFound())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(2))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("dummy test"));
-
     }
-
     @Test
     @DisplayName("deleteConfiguration")
     void deleteConfiguration() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.delete("/config/{configId}", 1))
                 .andExpect(status().isNoContent());
-
     }
-
     @Test
     @DisplayName("deleteConfigVariable")
     void deleteConfigVariable() throws Exception {
@@ -112,6 +101,5 @@ class ConfigurationControllersTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1));
-
     }
 }

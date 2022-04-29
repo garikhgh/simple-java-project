@@ -19,7 +19,6 @@ public class ConfigurationDto {
     private List<TagDto> tagListDto;
     @Singular
     private List<VariableDto> variableListDto;
-
     @Override
     public String toString() {
         return "ConfigurationDto{" +

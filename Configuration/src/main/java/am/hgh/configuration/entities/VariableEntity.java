@@ -16,29 +16,22 @@ import java.util.Objects;
 @Entity
 @Table(name = "configuration_variable")
 public class VariableEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
-
     private String name;
-
     private String description;
     private int minValue;
     private int maxValue;
     private int unit;
-
-
     @CreationTimestamp
     @Column(updatable = false)
     private LocalDate createdAt;
     private LocalDate lastModifiedAt;
-
     @ManyToOne
     @JsonBackReference
     private ConfigurationEntity configurationEntity;
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -46,12 +39,10 @@ public class VariableEntity {
         VariableEntity variable = (VariableEntity) o;
         return Objects.equals(id, variable.id);
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(id);
     }
-
     @Override
     public String toString() {
         return "VariableEntity{" +

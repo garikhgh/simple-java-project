@@ -41,7 +41,6 @@ class ConfigurationServicesTest {
 
     @Test
     void getAllConfigs() {
-
         Iterable<ConfigurationEntity> allConfig = configurationRepositories.findAll();
         Assertions.assertNotNull(allConfig);
     }
@@ -58,15 +57,10 @@ class ConfigurationServicesTest {
 
     @Test
     void addConfig() {
-
         ConfigurationSample4Test configurationSample4Test = new ConfigurationSample4Test();
         ConfigurationDto configurationDto = configurationSample4Test.getConfigurationDto(3L,5L,5L);
-
-
         ConfigurationEntity  config2Add = ConfigurationDateMapper.addLastModifiedDateAndSetConfigId(configurationDto);
-
         ConfigurationEntity addedConfig = configurationRepositories.save(config2Add);
-
         Assertions.assertNotNull(addedConfig);
         Assertions.assertNotNull(addedConfig.getId());
         Assertions.assertNotNull(addedConfig.getVariableList());
@@ -77,7 +71,6 @@ class ConfigurationServicesTest {
     void updateConfig() {
         ConfigurationSample4Test configurationSample4Test = new ConfigurationSample4Test();
         ConfigurationDto configurationDto = configurationSample4Test.getConfigurationDto(2L,3L,3L);
-
         Long configId = 1L;
         configurationRepositories.findById(configId).orElseThrow(() -> new NullPointerException(String.format(CONFIGURATION_DOES_NOT_EXIST, configId)));
         configurationDto.setId(configId);
@@ -91,13 +84,11 @@ class ConfigurationServicesTest {
 
     @Test
     void deleteConfigById() {
-
         Long configId = 1L;
         configurationRepositories.findById(configId).orElseThrow(() -> new NullPointerException(String.format(CONFIGURATION_DOES_NOT_EXIST, configId)));
         configurationRepositories.deleteById(configId);
         Optional<ConfigurationEntity> configurationEntity = configurationRepositories.findById(configId);
         Assertions.assertFalse(configurationEntity.isPresent());
-
     }
 
     @Test
@@ -115,9 +106,7 @@ class ConfigurationServicesTest {
         }
         configVariableListFromDb.removeAll(variableEntityList2Remove);
         configFromDb2UpdateVariableById.setVariableList(configVariableListFromDb);
-
         updatedConfig = configurationRepositories.save(configFromDb2UpdateVariableById);
-
         Assertions.assertEquals(1, updatedConfig.getVariableList().size());
 
     }

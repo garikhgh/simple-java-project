@@ -15,11 +15,9 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class TagDto {
-
     private Long id;
     private LocalDate createdAt;
     private LocalDate lastModifiedAt;
-
     @Override
     public String toString() {
         return "TagDto{" +

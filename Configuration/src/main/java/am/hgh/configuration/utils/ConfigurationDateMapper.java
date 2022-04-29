@@ -13,28 +13,22 @@ import java.util.List;
 
 @Component
 public class ConfigurationDateMapper {
-
     @Autowired
     private ConfigMapper configMapper;
     public   ConfigurationEntity addLastModifiedDateAndSetConfigId(ConfigurationDto configurationDto) {
-
         List<TagDto> tagListsFromFront = configurationDto.getTagListDto();
         List<VariableDto> variablesListFromFront = configurationDto.getVariableListDto();
-
         for (TagDto tagLastModified: tagListsFromFront) {
             tagLastModified.setLastModifiedAt(LocalDate.now());
         }
         for (VariableDto variableLastModified: variablesListFromFront) {
             variableLastModified.setLastModifiedAt(LocalDate.now());
         }
-
         configurationDto.setVariableListDto(variablesListFromFront);
         configurationDto.setTagListDto(tagListsFromFront);
-
         ConfigurationEntity config2Add = configMapper.configDto2Config(configurationDto);
         config2Add.getTagList().forEach(tagEntity->tagEntity.setConfigurationEntity(config2Add));
         config2Add.getVariableList().forEach(variableEntity -> variableEntity.setConfigurationEntity(config2Add));
-
         return config2Add;
     }
 }

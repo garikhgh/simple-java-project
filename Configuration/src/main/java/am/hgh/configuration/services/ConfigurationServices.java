@@ -29,32 +29,25 @@ public class ConfigurationServices {
     }
     public ConfigurationEntity getConfigById(Long configId) {
         return configurationRepositories.findById(configId).orElseThrow(() -> new NullPointerException(String.format(CONFIGURATION_DOES_NOT_EXIST, configId)));
-
     }
     public ConfigurationEntity createConfig(ConfigurationDto configurationDto) {
-
         ConfigurationEntity config2Add = configurationDateMapper.addLastModifiedDateAndSetConfigId(configurationDto);
         return configurationRepositories.save(config2Add);
     }
     public ConfigurationEntity updateConfig(ConfigurationDto configurationDto) {
-
             Long configId = configurationDto.getId();
             ConfigurationEntity config2Add = configurationDateMapper.addLastModifiedDateAndSetConfigId(configurationDto);
             configurationRepositories.findById(configId).orElseThrow(() -> new NullPointerException(String.format(CONFIGURATION_DOES_NOT_EXIST, configId)));
             return configurationRepositories.save(config2Add);
     }
-
     public void deleteConfigById(Long configId) {
         configurationRepositories.findById(configId).orElseThrow(() -> new NullPointerException(String.format(CONFIGURATION_DOES_NOT_EXIST, configId)));
         configurationRepositories.deleteById(configId);
     }
-
     public ConfigurationEntity deleteConfigVariableById(Long configId, Long variableId) {
-
         List<VariableEntity> variableEntityList2Remove = new ArrayList<>();
         ConfigurationEntity configFromDb2UpdateVariableById = configurationRepositories.findById(configId).orElseThrow(() -> new NullPointerException(String.format(CONFIGURATION_DOES_NOT_EXIST, configId)));
         List<VariableEntity> configVariableListFromDb = configFromDb2UpdateVariableById.getVariableList();
-
         for (VariableEntity variable : configVariableListFromDb) {
             if (variable.getId().equals(variableId)) {
                 variableEntityList2Remove.add(variable);

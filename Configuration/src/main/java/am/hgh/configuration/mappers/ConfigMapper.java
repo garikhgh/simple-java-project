@@ -6,13 +6,10 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-//@Component
 @Mapper(componentModel = "spring")
 public interface ConfigMapper {
 
     ConfigMapper INSTANCE = Mappers.getMapper(ConfigMapper.class);
-
-
 @Mapping(target = "variableListDto", source = "variableList")
 @Mapping(target = "tagListDto", source = "tagList")
 ConfigurationDto config2ConfigDto(ConfigurationEntity configurationEntity);
