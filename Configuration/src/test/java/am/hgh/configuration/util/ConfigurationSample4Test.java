@@ -11,10 +11,9 @@ import java.util.List;
 @Component
 public class ConfigurationSample4Test {
 
-    private ConfigurationDto configurationDto;
     public ConfigurationSample4Test() {}
 
-    public ConfigurationDto getConfigurationDto(Long configId, Long tagId, Long variableId) {
+    public static ConfigurationDto getConfigurationDto(Long configId, Long tagId, Long variableId) {
         TagDto tagDto = new TagDto(tagId, null, null);
         VariableDto variableDto = new VariableDto(variableId, "test",
                 "description", 111, 555, 444, null, null);

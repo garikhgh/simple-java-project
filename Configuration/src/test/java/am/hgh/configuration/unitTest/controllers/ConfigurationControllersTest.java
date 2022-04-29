@@ -32,8 +32,7 @@ class ConfigurationControllersTest {
             .create();
     @Autowired
     private MockMvc mockMvc;
-    @Autowired
-    ConfigurationSample4Test configurationSample4Test = new ConfigurationSample4Test();
+
     @Test
     @DisplayName("getAllConfigurations")
     void getAllConfigurations() throws Exception{
@@ -57,9 +56,9 @@ class ConfigurationControllersTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1));
     }
     @Test
-    @DisplayName("addConfiguration")
+    @DisplayName("createConfiguration")
     void createConfiguration() throws Exception {
-        ConfigurationDto configurationDto = configurationSample4Test.getConfigurationDto(3L,5L,5L);
+        ConfigurationDto configurationDto = ConfigurationSample4Test.getConfigurationDto(3L,5L,5L);
         mockMvc.perform(
                 MockMvcRequestBuilders
                         .post("/config/create")
@@ -67,13 +66,13 @@ class ConfigurationControllersTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(3));
     }
     @Test
     @DisplayName("updateConfiguration")
     void updateConfiguration() throws Exception{
-        ConfigurationDto configurationDto = configurationSample4Test.getConfigurationDto(2L,2L,2L);
+        ConfigurationDto configurationDto = ConfigurationSample4Test.getConfigurationDto(2L,2L,2L);
         mockMvc.perform(MockMvcRequestBuilders
                 .put("/config/update")
                 .content(gson.toJson(configurationDto))
@@ -93,7 +92,7 @@ class ConfigurationControllersTest {
     @Test
     @DisplayName("deleteConfigVariable")
     void deleteConfigVariable() throws Exception {
-        ConfigurationDto configurationDto = configurationSample4Test.getConfigurationDto(1L,1L,1L);
+        ConfigurationDto configurationDto = ConfigurationSample4Test.getConfigurationDto(1L,1L,1L);
         mockMvc.perform(MockMvcRequestBuilders.patch("/config/1/2")
                 .content(gson.toJson(configurationDto))
                 .contentType(MediaType.APPLICATION_JSON)
