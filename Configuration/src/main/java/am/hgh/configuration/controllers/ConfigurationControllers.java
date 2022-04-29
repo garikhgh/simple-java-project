@@ -4,6 +4,7 @@ import am.hgh.configuration.dto.ConfigurationDto;
 import am.hgh.configuration.entities.ConfigurationEntity;
 import am.hgh.configuration.services.ConfigurationServices;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,7 +35,7 @@ public class ConfigurationControllers {
     public ResponseEntity<ConfigurationEntity> createConfiguration(@RequestBody ConfigurationDto configDto) {
 
         ConfigurationEntity config = configurationServices.createConfig(configDto);
-        return ResponseEntity.ok(config);
+        return ResponseEntity.status(HttpStatus.CREATED).body(config);
     }
 
     @PutMapping("/update")
