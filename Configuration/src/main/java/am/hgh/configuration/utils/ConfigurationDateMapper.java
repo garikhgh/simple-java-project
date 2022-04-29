@@ -16,7 +16,7 @@ public class ConfigurationDateMapper {
 
     @Autowired
     private ConfigMapper configMapper;
-    public  ConfigurationEntity addLastModifiedDateAndSetConfigId(ConfigurationDto configurationDto) {
+    public   ConfigurationEntity addLastModifiedDateAndSetConfigId(ConfigurationDto configurationDto) {
 
         List<TagDto> tagListsFromFront = configurationDto.getTagListDto();
         List<VariableDto> variablesListFromFront = configurationDto.getVariableListDto();

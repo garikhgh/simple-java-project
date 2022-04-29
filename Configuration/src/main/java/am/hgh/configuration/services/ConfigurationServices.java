@@ -22,7 +22,7 @@ public class ConfigurationServices {
     private ConfigMapper configMapper;
 
     @Autowired
-    private ConfigurationDateMapper ConfigurationDateMapper;
+    private ConfigurationDateMapper configurationDateMapper;
 
     public List<ConfigurationEntity> getAllConfigs() {
         return (List<ConfigurationEntity>) configurationRepositories.findAll();
@@ -33,13 +33,13 @@ public class ConfigurationServices {
     }
     public ConfigurationEntity createConfig(ConfigurationDto configurationDto) {
 
-        ConfigurationEntity config2Add = ConfigurationDateMapper.addLastModifiedDateAndSetConfigId(configurationDto);
+        ConfigurationEntity config2Add = configurationDateMapper.addLastModifiedDateAndSetConfigId(configurationDto);
         return configurationRepositories.save(config2Add);
     }
     public ConfigurationEntity updateConfig(ConfigurationDto configurationDto) {
 
             Long configId = configurationDto.getId();
-            ConfigurationEntity config2Add = ConfigurationDateMapper.addLastModifiedDateAndSetConfigId(configurationDto);
+            ConfigurationEntity config2Add = configurationDateMapper.addLastModifiedDateAndSetConfigId(configurationDto);
             configurationRepositories.findById(configId).orElseThrow(() -> new NullPointerException(String.format(CONFIGURATION_DOES_NOT_EXIST, configId)));
             return configurationRepositories.save(config2Add);
     }
@@ -56,7 +56,7 @@ public class ConfigurationServices {
         List<VariableEntity> configVariableListFromDb = configFromDb2UpdateVariableById.getVariableList();
 
         for (VariableEntity variable : configVariableListFromDb) {
-            if (variable.getId() == variableId) {
+            if (variable.getId().equals(variableId)) {
                 variableEntityList2Remove.add(variable);
             }
         }
